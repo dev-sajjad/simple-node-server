@@ -8,7 +8,7 @@ app.use(cors());
 
 
 app.get('/', (req, res) => {
-    res.send('Simple node server is running.')
+    res.send('Simple node server is running')
 })
 
 
