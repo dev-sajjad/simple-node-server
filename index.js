@@ -26,16 +26,24 @@ const client = new MongoClient(uri, {
   serverApi: ServerApiVersion.v1,
 });
 
-// insert one to database
+// insert data to database
 async function run() {
   try {
-    const userCollection = client.db("simpleNode").collection("users");
+      const userCollection = client.db("simpleNode").collection("users");
+      
+      // find data from database and send 
+      app.get('/users', async (req, res) => {
+          const cursor = userCollection.find({});
+          const users = await cursor.toArray();
+          res.send(users)
 
+      })
+    // insert to database 
     app.post("/users", async(req, res) => {
       const user = req.body;
       const result = await userCollection.insertOne(user);
         console.log(result)
-        user.id = result.insertedId;
+        user._id = result.insertedId;
       res.send(user);
     });
   } finally {
@@ -49,6 +57,7 @@ app.get("/", (req, res) => {
   res.send("Simple node server is running");
 });
 
+// filter user by using query 
 app.get("/users", (req, res) => {
     if (req.query.name || req.query.email) {
         const search = req.query.name || req.query.email;
